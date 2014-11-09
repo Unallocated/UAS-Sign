@@ -10,18 +10,18 @@ class LEDSign
     @rtscts   = 0
     @signBuffer = [] #buffer to be written
     @signBufHistory = [] #buffer that was written
-    #SCF @formatRE =~ ('<ID\d\d><\w\w>.*') #match something that looks like <ID01><PA>
+    #TODO @formatRE =~ ('<ID\d\d><\w\w>.*') #match something that looks like <ID01><PA>
   end
 
   def formatMSG(msg, page='A')
     #Format a message with page and propper headers and footers
-    #SCF May need to work on this if elsif else
+    #TODO May need to work on this if elsif else
     if str(msg) == ''#clear each page
-        #SCF fmsg = '<ID01><P%s> %s \r\n'[:1016] %(page,msg)
+        #TODO fmsg = '<ID01><P%s> %s \r\n'[:1016] %(page,msg)
     elsif !(msg =~ '<ID\d\d><\w\w>.*') #use client supplied formatting
-        #SCF fmsg = str(msg)+'\r\n'[:1016]
+        #TODO fmsg = str(msg)+'\r\n'[:1016]
     else
-        #SCF fmsg = "<ID01><P%s><CL> {0} %s \r\n"[:1016] %(page,msg)
+        #TODO fmsg = "<ID01><P%s><CL> {0} %s \r\n"[:1016] %(page,msg)
     return fmsg
     end
   end
@@ -32,7 +32,7 @@ class LEDSign
     ledSign.signObj.write("<ID01>\r\n")
     responce = ledSign.signObj.read(10)
     CloseSerial()
-    #SCF not sure what responce[:8] means
+    #TODO not sure what responce[:8] means
         if len(responce) >=8 && responce.at(8) == "\x13<ID01>S"
             return True
         else
@@ -42,7 +42,7 @@ class LEDSign
 
   def openSerial
     #Open led sign serial device
-    #SCF Need to wrap this code in ruby error handling syntax
+    #TODO Need to wrap this code in ruby error handling syntax
     # try:
     #       @signObj  = serial.Serial(@tty, @baud, @bytesize,
     #         @parity, @stopbit, @timeout, @xonxoff, @rtscts)
@@ -55,7 +55,7 @@ class LEDSign
   def clearSign
     #A function to blank out every page on the sign
     print("Clearing all sign Pages")
-    #SCF need to make this a RUBY for loop
+    #TODO need to make this a RUBY for loop
     # for x in range(65,91):
     #     #time.sleep(.2)
     #     CycleWriteMsg('',chr(x)) #1016 is max message len
@@ -69,7 +69,7 @@ class LEDSign
 
   def CloseSerial(ledSign)
     #Flush all data to serial device and then close connection
-    #SCF need to format this if statement
+    #TODO need to format this if statement
     if ledSign.signObj.isOpen()
         ledSign.signObj.flush()
         ledSign.signObj.close()
@@ -78,7 +78,7 @@ class LEDSign
 
   def CycleWriteMsg(ledSign, message,page)
     #Open serial device write message then close it
-    #SCF need to format this if statement
+    #TODO need to format this if statement
     if ledSign.signObj.isOpen()
           ledSign.CloseSerial()
           ledSign.OpenSerial()
