@@ -1,6 +1,6 @@
 require 'sinatra'
 
-post '/messages/:message' do |
-  msg = LedSign.
+post '/messages/:message' do 
+  #SCF msg = LedSign.
   
 end

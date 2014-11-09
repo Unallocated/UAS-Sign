@@ -1,2 +1,2 @@
-class server
+class Server
 end
