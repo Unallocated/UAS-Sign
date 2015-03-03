@@ -1,0 +1,120 @@
+#!/usr/bin/env ruby
+require 'serialport'
+
+
+class LedSign 
+  def initialize
+    #set values for communication with the sign, establish serial connection
+    @prepend = "<ID01><PA>"
+    @terminator = " \r\n"
+    @serial = SerialPort.new("/dev/ttyUSB0",9600,8,1,SerialPort::NONE)
+    @serial.read_timeout = 100 #this is so @serial.read doesn't hang, units is ms
+  end
+
+  def is_on?
+    #check to see if the sign is responding
+    @serial.write("#{@prepend}#{@terminator}")
+    if @serial.read(8) == nil 
+      return false
+    else
+      return true
+    end
+  end
+
+  def write(message) #returns true for success, false when sign is off
+    if self.is_on?
+      sleep(1) #The sign can't take input too fast.
+      message = message[0,1016] #making sure we don't exceed the sign's max
+      @serial.write("#{@prepend}#{message}#{@terminator}")
+      return true
+    else
+      return false
+    end
+  end
+end
+
+class SignHandler
+  def initialize
+    @messages = Hash.new
+    @sign = LedSign.new
+    @colors = {
+      red: "<CB>",
+      orange: "<CD>",
+      yellow: "<CG>",
+      green: "<CM>",
+      rainbow: "<CP>"
+    }
+    @transitions = {
+      close: "<FG>",
+      dots: "<FR>",
+      scrollup: "<FI>",
+      scrolldown: "<FJ>",
+			none: ""
+    }
+  end
+  
+  #function to add a new message to the sign
+  def add(uuid, message, color = nil, transition = nil)
+		color ||= :red
+		transition ||= :close
+    @messages[uuid] = [message, color, transition]
+    return update #update will return false if message length is too long
+  end
+
+  #deletes message with number uuid from the sign
+  def delete(uuid)
+    @messages.delete(uuid)
+    update
+  end
+
+  #clears all messages from the sign
+  def reset
+    @messages.clear
+    update
+  end
+
+  private
+  def update
+    sign_text = ""
+    @messages.each do |key, value|
+        sign_text << "#{@transitions[value[2]]}#{@colors[value[1]]}#{value[0]}"
+      end
+		if sign_text.length < 1016
+			puts sign_text
+			@sign.write(sign_text)
+			sleep(1) #keeps the sign from updating too fast
+		else
+			false #return false when total message length is too long for the sign
+		end 
+	end
+end
+
+
+
+
+#=begin
+uas_sign = SignHandler.new
+uas_sign.add(1,"red ", :red, :none)
+uas_sign.add(2,"orange ", :orange, :none)
+uas_sign.add(3,"green ", :green, :none)
+uas_sign.add(4,"yellow ", :yellow, :none)
+uas_sign.add(5,"rainbow", :rainbow, :none)
+
+
+=begin
+text = "start: "
+while uas_sign.add(1, text, :yellow, :none)
+	text = text + "123456789test  1234123412341234123412341234"
+	puts text.length
+	sleep(9)
+end
+=begin
+for i in 0..5
+	uas_sign.add(42, "8======D", :rainbow, :none)
+	sleep(5)
+	uas_sign.add(42, "this is a test", :green, :none)
+	sleep(5)
+end
+
+uas_sign.reset
+=end
