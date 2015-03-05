@@ -26,3 +26,14 @@ end
 delete '/message/:uuid' do |id|
 	sign.delete(id)
 end
+
+post '/message/:uuid' do |id|
+	request.body.rewind #ditto above
+	data = JSON.parse request.body.read
+	#the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
+	sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
+	data[:uuid] = id
+	data.to_json
+end
+
+
