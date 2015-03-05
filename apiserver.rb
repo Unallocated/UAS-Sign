@@ -10,7 +10,7 @@ conf_json = JSON.parse conf_file
 sign = SignHandler.new(conf_json["serialDevice"])
 
 get '/' do
-	sign.add(1,"This text set via http!")
+	#sign.add(1,"This text set via http!")
 end
 
 post '/message/new' do

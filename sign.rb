@@ -92,7 +92,7 @@ end
 
 
 
-#=begin
+=begin
 uas_sign = SignHandler.new("/dev/ttyUSB0")
 uas_sign.add(1,"red ", :red, :none)
 uas_sign.add(2,"orange ", :orange, :none)
