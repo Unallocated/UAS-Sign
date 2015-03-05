@@ -53,6 +53,8 @@ class SignHandler
     }
   end
   
+	attr_reader :messages
+
   #function to add a new message to the sign
   def add(uuid, message, color = nil, transition = nil)
 		color ||= :red
