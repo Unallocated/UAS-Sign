@@ -4,7 +4,10 @@ require 'json'
 require 'securerandom' #for uuid generation
 require_relative 'sign.rb'
 
-sign = SignHandler.new
+conf_file = File.read("./sign.conf") #this can be dangerous if the file gets too big but our conf file should always be really small
+conf_json = JSON.parse conf_file
+
+sign = SignHandler.new(conf_json["serialDevice"])
 
 get '/' do
 	sign.add(1,"This text set via http!")

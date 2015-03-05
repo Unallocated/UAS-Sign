@@ -3,11 +3,11 @@ require 'serialport'
 
 
 class LedSign 
-  def initialize
+  def initialize(serial_dev)
     #set values for communication with the sign, establish serial connection
     @prepend = "<ID01><PA>"
     @terminator = " \r\n"
-    @serial = SerialPort.new("/dev/ttyUSB0",9600,8,1,SerialPort::NONE)
+    @serial = SerialPort.new(serial_dev,9600,8,1,SerialPort::NONE)
     @serial.read_timeout = 100 #this is so @serial.read doesn't hang, units is ms
   end
 
@@ -34,9 +34,9 @@ class LedSign
 end
 
 class SignHandler
-  def initialize
+  def initialize(serial_dev)
     @messages = Hash.new
-    @sign = LedSign.new
+    @sign = LedSign.new(serial_dev)
     @colors = {
       red: "<CB>",
       orange: "<CD>",
@@ -49,7 +49,7 @@ class SignHandler
       dots: "<FR>",
       scrollup: "<FI>",
       scrolldown: "<FJ>",
-			none: ""
+			none: " "
     }
   end
   
@@ -93,7 +93,7 @@ end
 
 
 #=begin
-uas_sign = SignHandler.new
+uas_sign = SignHandler.new("/dev/ttyUSB0")
 uas_sign.add(1,"red ", :red, :none)
 uas_sign.add(2,"orange ", :orange, :none)
 uas_sign.add(3,"green ", :green, :none)
