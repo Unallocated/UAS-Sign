@@ -13,6 +13,10 @@ set :port, conf_json["bindPort"]
 
 sign = SignHandler.new(conf_json["serialDevice"])
 
+before '/message/*' do #set default content-type for all api http responses
+	content_type 'application/json'
+end
+
 get '/' do #returns the readme if anyone requests the server root
 	File.read('./README.md')
 end
@@ -24,7 +28,7 @@ post '/message/new' do #write a new message to the sign
 	#I'm not sure if the line below is elegant or hackey
 	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
 	data[:uuid] = newid
-	status  201
+	status  201 #return with HTTP status 201 since we're creating a new resource
 	headers "Location" => url("/#{newid}") #set the HTTP Location header to the message object URI
 	data.to_json
 end
