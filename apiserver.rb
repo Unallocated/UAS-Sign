@@ -4,11 +4,12 @@ require 'json'
 require 'securerandom' #for uuid generation
 require_relative 'sign.rb'
 
-set :bind, '0.0.0.0'
-set :port, '8080'
 
 conf_file = File.read("./sign.conf") #this can be dangerous if the file gets too big but our conf file should always be really small
 conf_json = JSON.parse conf_file
+
+set :bind, conf_json["bindIp"]
+set :port, conf_json["bindPort"]
 
 sign = SignHandler.new(conf_json["serialDevice"])
 
@@ -24,7 +25,7 @@ post '/message/new' do #write a new message to the sign
 	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
 	data[:uuid] = newid
 	status  201
-	headers "Location" => "http://server/message/#{newid}"
+	headers "Location" => url("/#{newid}") #set the HTTP Location header to the message object URI
 	data.to_json
 end
 
