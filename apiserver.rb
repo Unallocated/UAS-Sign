@@ -12,7 +12,7 @@ conf_json = JSON.parse conf_file
 
 sign = SignHandler.new(conf_json["serialDevice"])
 
-get '/' do
+get '/' do #returns the readme if anyone requests the server root
 	File.read('./README.md')
 end
 
@@ -23,6 +23,8 @@ post '/message/new' do #write a new message to the sign
 	#I'm not sure if the line below is elegant or hackey
 	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
 	data[:uuid] = newid
+	status  201
+	headers "Location" => "http://server/message/#{newid}"
 	data.to_json
 end
 
