@@ -4,6 +4,9 @@ require 'json'
 require 'securerandom' #for uuid generation
 require_relative 'sign.rb'
 
+set :bind, '0.0.0.0'
+set :port, '8080'
+
 conf_file = File.read("./sign.conf") #this can be dangerous if the file gets too big but our conf file should always be really small
 conf_json = JSON.parse conf_file
 
