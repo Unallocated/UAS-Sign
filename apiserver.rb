@@ -30,7 +30,7 @@ delete '/message/:uuid' do |id| #delete message [uuid]
 	sign.delete(id)
 end
 
-post '/message/:uuid' do |id| #change message [uuid]
+put '/message/:uuid' do |id| #change message [uuid]
 	request.body.rewind #ditto above
 	data = JSON.parse request.body.read
 	#the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
