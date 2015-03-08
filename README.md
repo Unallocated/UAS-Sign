@@ -40,3 +40,12 @@ The uuid of a message is only know to the person/client and the server so that m
 
 http PUT to [server_ip]/message/[uuid] to change message [uuid]
 	curl -X PUT -d '{"message":"This is updated message text.","color":"orange","transition":"none"}' signserver:8080/message/cf7e5697-1b18-421e-b2b8-85b2d3bc4194
+
+Admin functionality:
+The following actions can only be preformed from localhost.
+
+http get to [server_ip]/message/all
+	returns all messages and their id's
+
+http DELETE to [server_ip]/message/all
+	deletes every message from the sign
