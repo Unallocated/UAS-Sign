@@ -18,6 +18,7 @@ before '/message/*' do #set default content-type for all api http responses
 end
 
 get '/' do #returns the readme if anyone requests the server root
+	content_type 'text/plain'
 	File.read('./README.md')
 end
 
@@ -75,5 +76,6 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
 end
 
 not_found do
+	content_type 'application/json'
 	{:error => "resource not found"}.to_json
 end
