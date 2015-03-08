@@ -42,10 +42,12 @@ delete '/message/all' do #allow deleting all messages from localhost
 end
 
 delete '/message/:uuid' do |id| #delete message [uuid]
+	raise not_found if sign.messages[id] == nil
 	sign.delete(id)
 end
 
 put '/message/:uuid' do |id| #change message [uuid]
+	raise not_found if sign.messages[id] == nil
 	request.body.rewind #ditto above
 	data = JSON.parse request.body.read
 	#the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
@@ -63,6 +65,7 @@ get '/message/all' do #allow viewing all messages from localhost
 end
 
 get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would need it but I'm including it anyway just in case
+	raise not_found if sign.messages[id] == nil
 	data = Hash.new
 	data['message'] = sign.messages[id][0]
 	data['color'] = sign.messages[id][1]
@@ -71,4 +74,6 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
 	data.to_json
 end
 
-
+not_found do
+	{:error => "resource not found"}.to_json
+end
