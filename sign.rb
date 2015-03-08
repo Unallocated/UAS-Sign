@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'serialport'
-
+require 'rufus-scheduler'
 
 class LedSign 
   def initialize(serial_dev)
@@ -49,17 +49,22 @@ class SignHandler
       dots: "<FR>",
       scrollup: "<FI>",
       scrolldown: "<FJ>",
-			none: " "
+			none: " {0} "
     }
+		@scheduler = Rufus::Scheduler.new
   end
   
 	attr_reader :messages
 
   #function to add a new message to the sign
-  def add(uuid, message, color = nil, transition = nil)
+  def add(uuid, message, color = nil, transition = nil, timer = nil)
 		color ||= :red
 		transition ||= :close
-    @messages[uuid] = [message, color, transition]
+		timer ||= '30m'
+    @messages[uuid] = [message, color, transition, timer]
+		@scheduler.in timer do
+			self.delete(uuid)
+		end
     return update #update will return false if message length is too long
   end
 

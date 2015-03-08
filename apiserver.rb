@@ -26,7 +26,7 @@ post '/message/new' do #write a new message to the sign
 	request.body.rewind #I'm not sure what this does but sinatra docs say to do it
 	data = JSON.parse request.body.read
 	#I'm not sure if the line below is elegant or hackey
-	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
+	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer')))
 	data[:uuid] = newid
 	status  201 #return with HTTP status 201 since we're creating a new resource
 	headers "Location" => url("/#{newid}") #set the HTTP Location header to the message object URI
@@ -41,7 +41,7 @@ put '/message/:uuid' do |id| #change message [uuid]
 	request.body.rewind #ditto above
 	data = JSON.parse request.body.read
 	#the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
-	sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')))
+	sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer')))
 	data[:uuid] = id
 	data.to_json
 end
@@ -51,6 +51,7 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
 	data['message'] = sign.messages[id][0]
 	data['color'] = sign.messages[id][1]
 	data['transition'] = sign.messages[id][2]
+	data['timer'] = sign.messages[id][3] #todo make this return the time the message will be deleted
 	data.to_json
 end
 
