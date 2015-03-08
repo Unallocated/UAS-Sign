@@ -33,6 +33,14 @@ post '/message/new' do #write a new message to the sign
 	data.to_json
 end
 
+delete '/message/all' do #allow deleting all messages from localhost
+	if request.ip == '127.0.0.1'
+		sign.reset
+	else
+		status 401
+	end
+end
+
 delete '/message/:uuid' do |id| #delete message [uuid]
 	sign.delete(id)
 end
@@ -46,6 +54,14 @@ put '/message/:uuid' do |id| #change message [uuid]
 	data.to_json
 end
 
+get '/message/all' do #allow viewing all messages from localhost
+	if request.ip == '127.0.0.1'
+		sign.messages.to_json
+	else
+		status 401
+	end
+end
+
 get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would need it but I'm including it anyway just in case
 	data = Hash.new
 	data['message'] = sign.messages[id][0]
@@ -54,4 +70,5 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
 	data['timer'] = sign.messages[id][3] #todo make this return the time the message will be deleted
 	data.to_json
 end
+
 
