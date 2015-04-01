@@ -2,13 +2,26 @@ UAS-Sign
 ========
 
 Unallocated Space Prolite sign API code
+---------------------------------------
 
 This code provides a REST API for updating the text on the LED sign above the bathrooms.
 
-This readme is not complete and the code is still considered to be beta so at any given time this may be outdated or inacurate.
+*This readme is not complete and the code is still considered to be beta so at any given time this may be outdated or inacurate.*
 
 The code will not run unless it has a valid serial device to output to. For testing purposes, you can create a fake serial device with socat like this:
 socat -d -d pty,raw,echo=0 pty,raw,echo=0
+
+Suported HTTP Methods
+---------------------
+| Method | Target                  | Response       | Result                                                           |
+|--------|-------------------------|----------------|------------------------------------------------------------------|
+| POST   | [server]/message/new    | 201 on success | A new message is written to the sign                             |
+| PUT    | [server]/message/[uuid] | 200 on success | An existing message is updated                                   |
+| DELETE | [server]/message/[uuid] | 200 on success | A message is deleted from the sign                               |
+| GET    | [server]/message/[uuid] | 200 on success | Returns message attributes, does not change anything on the sign |
+
+The server will respond with a 404 error if a target does not exist.
+
 
 Example usage:
 http POST to [server_ip]:8080/message/new to write a new message to the sign:
