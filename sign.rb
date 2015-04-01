@@ -13,8 +13,9 @@ class LedSign
 
   def is_on?
     #check to see if the sign is responding
+		@serial.flush_input #flush data that has not been read
     @serial.write("#{@prepend}#{@terminator}")
-    if @serial.read(8) == nil 
+		if @serial.read(8) == nil #This should be 12 bits for for some reason it breaks things when set to 12
       return false
     else
       return true

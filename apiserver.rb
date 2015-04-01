@@ -18,6 +18,7 @@ before '/message/*' do #set default content-type for all api http responses
 end
 
 get '/' do #returns the readme if anyone requests the server root
+	content_type 'text/plain'
 	File.read('./README.md')
 end
 
@@ -26,14 +27,14 @@ post '/message/new' do #write a new message to the sign
 	request.body.rewind #I'm not sure what this does but sinatra docs say to do it
 	data = JSON.parse request.body.read
 	#I'm not sure if the line below is elegant or hackey
-	sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer')))
+	data[:status] = sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer'))) ? "on" : "off" #adds message to the sign and returns on/off status
 	data[:uuid] = newid
 	status  201 #return with HTTP status 201 since we're creating a new resource
 	headers "Location" => url("/#{newid}") #set the HTTP Location header to the message object URI
 	data.to_json
 end
 
-delete '/message/all' do #allow deleting all messages from localhost
+delete '/message/all' do #allow deleting all messages from localhost only
 	if request.ip == '127.0.0.1'
 		sign.reset
 	else
@@ -51,12 +52,12 @@ put '/message/:uuid' do |id| #change message [uuid]
 	request.body.rewind #ditto above
 	data = JSON.parse request.body.read
 	#the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
-	sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer')))
+	data[:status] = sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer'))) ? "on" : "off"
 	data[:uuid] = id
 	data.to_json
 end
 
-get '/message/all' do #allow viewing all messages from localhost
+get '/message/all' do #allow viewing all messages from localhost only
 	if request.ip == '127.0.0.1'
 		sign.messages.to_json
 	else
@@ -75,5 +76,6 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
 end
 
 not_found do
+	content_type 'application/json'
 	{:error => "resource not found"}.to_json
 end
