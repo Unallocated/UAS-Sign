@@ -16,11 +16,15 @@ The table below shows methods the server will respond to from any client.
 | Method | Target                  | Response                        | Result                                                            |
 |--------|-------------------------|---------------------------------|-------------------------------------------------------------------|
 | POST   | [server]/message/new    | 201 with all message attributes | A new message is written to the sign and assigned a new uuid.     |
-| PUT    | [server]/message/[uuid] | 200 with all message attributes | An existing message is updated.                                   |
+| PUT    | [server]/message/[uuid] | 200 with all message attributes | An existing message is updated.**see note**                       |
 | DELETE | [server]/message/[uuid] | 200 with no data                | A message is deleted from the sign.                               |
 | GET    | [server]/message/[uuid] | 200 with all message attributes | Returns message attributes, does not change anything on the sign. |
 
 The server will respond with a 404 error if a target does not exist.
+
+**Note:**Currently the PUT request will set default attribute values to the message when they are not specifed. For example, if you update a
+message that is orange with a new message and do not add `{ "color":"orange" }` to your request, the default value for the color attribute (red)
+will be applied to the message. This is not desired behavior and will be fixed in futre updates.
 
 ###Admin Methods
 This table shows methods the server will respond to if the request orginates from localhost(127.0.0.1) only.
@@ -67,11 +71,11 @@ The server will respond to valid requests with all of the client specified attri
 Example usage
 -------------
 
-Here are some examples of interacting with the sign using curl.
+Here are some examples of interacting with the sign using curl. The examples are using the "-v" switch to show HTTP headers.
 
 Write a new message to the sign:
 
-`curl -d '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' signserver:8080/message/new`
+`curl -vd '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' localhost:8080/message/new`
 
 Server response(HTTP header + JSON data):
 > < HTTP/1.1 201 Created                                                                                                                            
@@ -85,18 +89,56 @@ Server response(HTTP header + JSON data):
 > {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
 
 
-http DELETE to [server_ip]/message/[uuid] to remove message [uuid] from the sign
-	curl -X DELETE signserver:8080/message/cf7e5697-1b18-421e-b2b8-85b2d3bc4194
-The uuid of a message is only know to the person/client and the server so that messages can only be deleted by their creators
+Update the message we just wrote with new text:
 
-http PUT to [server_ip]/message/[uuid] to change message [uuid]
-	curl -X PUT -d '{"message":"This is updated message text.","color":"orange","transition":"none"}' signserver:8080/message/cf7e5697-1b18-421e-b2b8-85b2d3bc4194
+`curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03'`
 
-Admin functionality:
-The following actions can only be preformed from localhost.
+Server response(HTTP header + JSON data):
+> < HTTP/1.1 200 OK                                                                                                          
+> < Content-Type: application/json                                                                                           
+> < Content-Length: 100                                                                                                      
+> < X-Content-Type-Options: nosniff                                                                                          
+> < Connection: keep-alive                                                                                                   
+> < Server: thin 1.3.1 codename Triple Espresso                                                                              
+> <                                                                                                                                                                                                       
+> {"message":"This is an updated message","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
 
-http get to [server_ip]/message/all
-	returns all messages and their id's
+Note that the server does not return message attributes that were not set by the client (color, timer, transition). These attributes will be reset to their
+defaults. See note on PUT requests above. This is not desired behavior and will be addressed in the future.
 
-http DELETE to [server_ip]/message/all
-	deletes every message from the sign
+Getting the message from the server:
+
+`curl -v localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
+
+Server response(HTTP header + JSON data):
+> < HTTP/1.1 200 OK                                                                        
+> < Content-Type: application/json                                                         
+> < Content-Length: 89                                                                     
+> < X-Content-Type-Options: nosniff                                                        
+> < Connection: keep-alive                                                                 
+> < Server: thin 1.3.1 codename Triple Espresso                                            
+> <                                                                                                                                    
+> {"message":"This is an updated message","color":"red","transition":"close","timer":"30m"}>
+
+Note again that the color, transition, and timer attributes have been reset to defaults.
+
+Deleting a message from the server:
+
+`curl -vX DELETE localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
+
+Server response(HTTP header + JSON data):
+> < HTTP/1.1 1                                 
+> < Content-Type: application/json             
+> < Content-Length: 0                          
+> < X-Content-Type-Options: nosniff            
+> < Connection: keep-alive                     
+> < Server: thin 1.3.1 codename Triple Espresso
+
+Notes
+-----
+
+Server response codes are not completly RESTfull yet. In the future responses that return no data will set 204 instead of 200.
+There is no error checking built into the codebase yet so it is entirely possible that a malicious request could break things.
+If you find a bug please report it as an issue on the github page.
+
+Hack the planet.
