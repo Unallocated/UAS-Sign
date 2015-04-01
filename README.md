@@ -12,6 +12,7 @@ Suported HTTP Methods
 ---------------------
 ###Client Methods
 The table below shows methods the server will respond to from any client.
+
 | Method | Target                  | Response                        | Result                                                            |
 |--------|-------------------------|---------------------------------|-------------------------------------------------------------------|
 | POST   | [server]/message/new    | 201 with all message attributes | A new message is written to the sign and assigned a new uuid.     |
@@ -23,6 +24,7 @@ The server will respond with a 404 error if a target does not exist.
 
 ###Admin Methods
 This table shows methods the server will respond to if the request orginates from localhost(127.0.0.1) only.
+
 | Method | Target                | Response                            | Result                                                                       |
 |--------|-----------------------|-------------------------------------|------------------------------------------------------------------------------|
 | GET    | [server]/message/all  | 200 with every message's attributes | Returns every message's attributes, does not change anything on the sign.    |
