@@ -64,29 +64,24 @@ The server will respond to valid requests with all of the client specified attri
 | uuid      | A valid v4 uuid | This is the id of a given message. The server will generate a uuid for every message that is used to update or delete the message. |
 | status    | on, off         | This is the status of the sign. Returns "on" if the sign is powered on, "off" if the sign is not powered on.                       |
 
-Example usage:
-http POST to [server_ip]:8080/message/new to write a new message to the sign:
-	curl -d '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' signserver:8080/message/new
-The server will return:
-	{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","uuid":"d3397304-4363-46fe-9a7b-14fb1eba6b65"}
-The uuid is unique to your message and is used to update or delete your message
-color, transition, and timer are optional, if they are ommited they default to "red", "close", and "30m"
+Example usage
+-------------
 
-Color options are:
-	red
-	green
-	yellow
-	orange
-	rainbow
+Here are some examples of interacting with the sign using curl.
 
-Transition options are:
-	none
-	close
-	dots
-	scrollup
-	scrolldown
-	
-Timer is a time string in the format [num]h[num[m]. The message will be automatically deleted after the time has elapsed.
+Write a new message to the sign:
+`curl -d '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' signserver:8080/message/new`
+Server response(HTTP header + JSON data):
+> < HTTP/1.1 201 Created                                                                                                                            
+> < Content-Type: application/json                                                                                                                  
+> < Location: http://localhost:8080/95b00c05-b134-4f7d-9a61-6fcd55b9ec03                                                                            
+> < Content-Length: 150                                                                                                                             
+> < X-Content-Type-Options: nosniff                                                                                                                 
+> < Connection: keep-alive                                                                                                                          
+> < Server: thin 1.3.1 codename Triple Espresso                                                                                                     
+> <                                                                                                                                                                                                                                                     
+> {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
+
 
 http DELETE to [server_ip]/message/[uuid] to remove message [uuid] from the sign
 	curl -X DELETE signserver:8080/message/cf7e5697-1b18-421e-b2b8-85b2d3bc4194
