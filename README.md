@@ -73,7 +73,7 @@ Example usage
 
 Here are some examples of interacting with the sign using curl. The examples are using the "-v" switch to show HTTP headers.
 
-Write a new message to the sign:
+####Write a new message to the sign:
 
 `curl -vd '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' localhost:8080/message/new`
 
@@ -89,7 +89,7 @@ Server response(HTTP header + JSON data):
 > {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
 
 
-Update the message we just wrote with new text:
+####Update the message we just wrote with new text:
 
 `curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03'`
 
@@ -106,7 +106,7 @@ Server response(HTTP header + JSON data):
 Note that the server does not return message attributes that were not set by the client (color, timer, transition). These attributes will be reset to their
 defaults. See note on PUT requests above. This is not desired behavior and will be addressed in the future.
 
-Getting the message from the server:
+####Getting the message from the server:
 
 `curl -v localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
 
@@ -122,7 +122,7 @@ Server response(HTTP header + JSON data):
 
 Note again that the color, transition, and timer attributes have been reset to defaults.
 
-Deleting a message from the server:
+####Deleting a message from the server:
 
 `curl -vX DELETE localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
 
