@@ -13,12 +13,12 @@ socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
 Suported HTTP Methods
 ---------------------
-| Method | Target                  | Response       | Result                                                           |
-|--------|-------------------------|----------------|------------------------------------------------------------------|
-| POST   | [server]/message/new    | 201 on success | A new message is written to the sign                             |
-| PUT    | [server]/message/[uuid] | 200 on success | An existing message is updated                                   |
-| DELETE | [server]/message/[uuid] | 200 on success | A message is deleted from the sign                               |
-| GET    | [server]/message/[uuid] | 200 on success | Returns message attributes, does not change anything on the sign |
+| Method | Target                  | Response                        | Result                                                            |
+|--------|-------------------------|---------------------------------|-------------------------------------------------------------------|
+| POST   | [server]/message/new    | 201 with all message attributes | A new message is written to the sign and assigned a new uuid.     |
+| PUT    | [server]/message/[uuid] | 200 with all message attributes | An existing message is updated.                                   |
+| DELETE | [server]/message/[uuid] | 200 with no data                | A message is deleted from the sign.                               |
+| GET    | [server]/message/[uuid] | 200 with all message attributes | Returns message attributes, does not change anything on the sign. |
 
 The server will respond with a 404 error if a target does not exist.
 
