@@ -5,8 +5,8 @@ This code provides a REST API for updating the text on the LED sign above the ba
 
 *This readme is not complete and the code is still considered to be beta so at any given time this may be outdated or inacurate.*
 
-The code will not run unless it has a valid serial device to output to. For testing purposes, you can create a fake serial device with socat like this:
-socat -d -d pty,raw,echo=0 pty,raw,echo=0
+The code will not run unless it has a valid serial device to output to. For testing purposes, you can create a fake serial device with socat like this: `socat -d -d pty,raw,echo=0 pty,raw,echo=0`
+
 
 Suported HTTP Methods
 ---------------------
