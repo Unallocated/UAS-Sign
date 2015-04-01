@@ -39,18 +39,9 @@ The server accepts JSON data for POST and PUT requests with attributes from the 
 | Attribute  | Required | Valid values                                                    | Effect                                                     |
 |------------|----------|-----------------------------------------------------------------|------------------------------------------------------------|
 | message    | yes      | String contanting any characters supported by the ProLite sign. | This is the text of the message being written to the sign. |
-| color      | no       | red                                                             | This will set to color of the message.                     |
-|            |          | green                                                           |                                                            |
-|            |          | yellow                                                          |                                                            |
-|            |          | orange                                                          |                                                            |
-|            |          | rainbow                                                         |                                                            |
-| transition | no       | none                                                            | This sets how the sign will transition into the message.   |
-|            |          | close                                                           |                                                            |
-|            |          | dots                                                            |                                                            |
-|            |          | scrollup                                                        |                                                            |
-|            |          | scrolldown                                                      |                                                            |
+| color      | no       | red, green, yellow, orange, rainbow                             | This will set to color of the message.                     |
+| transition | no       | none, close, dots, scrollup, scrolldown                         | This sets how the sign will transition into the message.   |
 | timer      | no       | [num]h[num]m                                                    | This sets how long the message will be displayed.          |
-|            |          |                                                                 | The message will be deleted after the time has elapsed.    |
 
 
 
