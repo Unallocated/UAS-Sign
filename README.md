@@ -70,7 +70,9 @@ Example usage
 Here are some examples of interacting with the sign using curl.
 
 Write a new message to the sign:
+
 `curl -d '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' signserver:8080/message/new`
+
 Server response(HTTP header + JSON data):
 > < HTTP/1.1 201 Created                                                                                                                            
 > < Content-Type: application/json                                                                                                                  
