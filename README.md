@@ -32,6 +32,32 @@ This table shows methods the server will respond to if the request orginates fro
 
 The server will respond with a 401 if a client that isn't localhost uses either method on "/message/all".
 
+Message Attributes
+------------------
+The server accepts JSON data for POST and PUT requests with attributes from the table below.
+
+| Attribute  | Required | Valid values                                                    | Effect                                                     |
+|------------|----------|-----------------------------------------------------------------|------------------------------------------------------------|
+| message    | yes      | String contanting any characters supported by the ProLite sign. | This is the text of the message being written to the sign. |
+| color      | no       | red                                                             | This will set to color of the message.                     |
+|            |          | green                                                           |                                                            |
+|            |          | yellow                                                          |                                                            |
+|            |          | orange                                                          |                                                            |
+|            |          | rainbow                                                         |                                                            |
+| transition | no       | none                                                            | This sets how the sign will transition into the message.   |
+|            |          | close                                                           |                                                            |
+|            |          | dots                                                            |                                                            |
+|            |          | scrollup                                                        |                                                            |
+|            |          | scrolldown                                                      |                                                            |
+| timer      | no       | [num]h[num]m                                                    | This sets how long the message will be displayed.          |
+|            |          |                                                                 | The message will be deleted after the time has elapsed.    |
+
+
+
+
+
+
+
 Example usage:
 http POST to [server_ip]:8080/message/new to write a new message to the sign:
 	curl -d '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' signserver:8080/message/new
