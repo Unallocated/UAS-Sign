@@ -1,9 +1,6 @@
 UAS-Sign
 ========
 
-Unallocated Space Prolite sign API code
----------------------------------------
-
 This code provides a REST API for updating the text on the LED sign above the bathrooms.
 
 *This readme is not complete and the code is still considered to be beta so at any given time this may be outdated or inacurate.*
@@ -13,6 +10,8 @@ socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
 Suported HTTP Methods
 ---------------------
+###Client Methods
+The table below shows methods the server will respond to from any client.
 | Method | Target                  | Response                        | Result                                                            |
 |--------|-------------------------|---------------------------------|-------------------------------------------------------------------|
 | POST   | [server]/message/new    | 201 with all message attributes | A new message is written to the sign and assigned a new uuid.     |
@@ -22,6 +21,14 @@ Suported HTTP Methods
 
 The server will respond with a 404 error if a target does not exist.
 
+###Admin Methods
+This table shows methods the server will respond to if the request orginates from localhost(127.0.0.1) only.
+| Method | Target                | Response                            | Result                                                                       |
+|--------|-----------------------|-------------------------------------|------------------------------------------------------------------------------|
+| GET    | [server]/message/all  | 200 with every message's attributes | Returns every message's attributes, does not change anything on the sign.    |
+| DELETE | [server]/message/all  | 200 with no data                    | Nuclear option, deletes every message from the sign and any queued messages. |
+
+The server will respond with a 401 if a client that isn't localhost uses either method on "/message/all".
 
 Example usage:
 http POST to [server_ip]:8080/message/new to write a new message to the sign:
