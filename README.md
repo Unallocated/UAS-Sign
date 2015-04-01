@@ -34,7 +34,11 @@ The server will respond with a 401 if a client that isn't localhost uses either 
 
 Message Attributes
 ------------------
-The server accepts JSON data for POST and PUT requests with attributes from the table below.
+The server accepts JSON formatted data for POST and PUT requests and will return JSON formatted data on all requests that return data.
+
+###Client Attributes
+
+The attributes in the table below are set by the client in POST or PUT requests. 
 
 | Attribute  | Required | Valid values                                                    | Effect                                                     |
 |------------|----------|-----------------------------------------------------------------|------------------------------------------------------------|
@@ -43,11 +47,22 @@ The server accepts JSON data for POST and PUT requests with attributes from the 
 | transition | no       | none, close, dots, scrollup, scrolldown                         | This sets how the sign will transition into the message.   |
 | timer      | no       | [num]h[num]m                                                    | This sets how long the message will be displayed.          |
 
+Default values for attributes will be allpied if they are not specifed by the client.
 
+| Attribute  | Default Value |
+|------------|---------------|
+| color      | red           |
+| transition | close         |
+| timer      | 30m           |
 
+###Server Response Attributes
 
+The server will respond to valid requests with all of the client specified attributes and with two additional attributes.
 
-
+| Attribute | Possible Values | Explanation                                                                                                                        |
+|-----------|-----------------|------------------------------------------------------------------------------------------------------------------------------------|
+| uuid      | A valid v4 uuid | This is the id of a given message. The server will generate a uuid for every message that is used to update or delete the message. |
+| status    | on, off         | This is the status of the sign. Returns "on" if the sign is powered on, "off" if the sign is not powered on.                       |
 
 Example usage:
 http POST to [server_ip]:8080/message/new to write a new message to the sign:
