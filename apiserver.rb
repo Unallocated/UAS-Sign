@@ -35,11 +35,8 @@ post '/message/new' do #write a new message to the sign
 end
 
 delete '/message/all' do #allow deleting all messages from localhost only
-  if request.ip == '127.0.0.1'
-    sign.reset
-  else
-    status 401
-  end
+  request.ip == '127.0.0.1' ? sign.reset : (halt 401) #return 401 if requested is not localhost
+  status 204
 end
 
 delete '/message/:uuid' do |id| #delete message [uuid]
