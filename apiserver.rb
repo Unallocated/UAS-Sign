@@ -30,7 +30,7 @@ post '/message/new' do #write a new message to the sign
   data[:status] = sign.add(newid,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer'))) ? "on" : "off" #adds message to the sign and returns on/off status
   data[:uuid] = newid
   status  201 #return with HTTP status 201 since we're creating a new resource
-  headers "Location" => url("/#{newid}") #set the HTTP Location header to the message object URI
+  headers "Location" => url("/message/#{newid}") #set the HTTP Location header to the message object URI
   data.to_json
 end
 
