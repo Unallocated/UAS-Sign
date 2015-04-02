@@ -13,9 +13,9 @@ class LedSign
 
   def is_on?
     #check to see if the sign is responding
-		@serial.flush_input #flush data that has not been read
+    @serial.flush_input #flush data that has not been read
     @serial.write("#{@prepend}#{@terminator}")
-		if @serial.read(8) == nil #This should be 12 bits for for some reason it breaks things when set to 12
+    if @serial.read(8) == nil #This should be 12 bits for for some reason it breaks things when set to 12
       return false
     else
       return true
@@ -50,22 +50,22 @@ class SignHandler
       dots: "<FR>",
       scrollup: "<FI>",
       scrolldown: "<FJ>",
-			none: " {0} "
+      none: " {0} "
     }
-		@scheduler = Rufus::Scheduler.new
+    @scheduler = Rufus::Scheduler.new
   end
   
-	attr_reader :messages
+  attr_reader :messages
 
   #function to add a new message to the sign
   def add(uuid, message, color = nil, transition = nil, timer = nil)
-		color ||= :red
-		transition ||= :close
-		timer ||= '30m'
+    color ||= :red
+    transition ||= :close
+    timer ||= '30m'
     @messages[uuid] = [message, color, transition, timer]
-		@scheduler.in timer do
-			self.delete(uuid)
-		end
+    @scheduler.in timer do
+      self.delete(uuid)
+    end
     return update #update will return false if message length is too long
   end
 
@@ -87,14 +87,14 @@ class SignHandler
     @messages.each do |key, value|
         sign_text << "#{@transitions[value[2]]}#{@colors[value[1]]}#{value[0]}"
       end
-		if sign_text.length < 1016
-			puts sign_text
-			@sign.write(sign_text)
-			sleep(1) #keeps the sign from updating too fast
-		else
-			false #return false when total message length is too long for the sign
-		end 
-	end
+    if sign_text.length < 1016
+      puts sign_text
+      @sign.write(sign_text)
+      sleep(1) #keeps the sign from updating too fast
+    else
+      false #return false when total message length is too long for the sign
+    end 
+  end
 end
 
 
@@ -112,16 +112,16 @@ uas_sign.add(5,"rainbow", :rainbow, :none)
 =begin
 text = "start: "
 while uas_sign.add(1, text, :yellow, :none)
-	text = text + "123456789test  1234123412341234123412341234"
-	puts text.length
-	sleep(9)
+  text = text + "123456789test  1234123412341234123412341234"
+  puts text.length
+  sleep(9)
 end
 =begin
 for i in 0..5
-	uas_sign.add(42, "8======D", :rainbow, :none)
-	sleep(5)
-	uas_sign.add(42, "this is a test", :green, :none)
-	sleep(5)
+  uas_sign.add(42, "8======D", :rainbow, :none)
+  sleep(5)
+  uas_sign.add(42, "this is a test", :green, :none)
+  sleep(5)
 end
 
 uas_sign.reset
