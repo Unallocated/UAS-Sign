@@ -55,11 +55,7 @@ put '/message/:uuid' do |id| #change message [uuid]
 end
 
 get '/message/all' do #allow viewing all messages from localhost only
-  if request.ip == '127.0.0.1'
-    sign.messages.to_json
-  else
-    status 401
-  end
+  request.ip == '127.0.0.1' ? sign.messages.to_json : (halt 401)
 end
 
 get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would need it but I'm including it anyway just in case
@@ -75,4 +71,9 @@ end
 not_found do
   content_type 'application/json'
   {:error => "resource not found"}.to_json
+end
+
+error 401 do
+  content_type 'application/json'
+  {:error => 'request must come from localhost'}.to_json
 end
