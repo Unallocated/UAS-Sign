@@ -62,7 +62,12 @@ class SignHandler
     color ||= :red
     transition ||= :close
     timer ||= '30m'
-    @messages[uuid] = [message, color, transition, timer]
+    @messages[uuid] = {
+			message: message,
+			color: color,
+			transition: transition,
+			timer: timer
+		}
     @scheduler.in timer do
       self.delete(uuid)
     end
@@ -85,7 +90,8 @@ class SignHandler
   def update
     sign_text = ""
     @messages.each do |key, value|
-        sign_text << "#{@transitions[value[2]]}#{@colors[value[1]]}#{value[0]}"
+        #sign_text << "#{@transitions[value[2]]}#{@colors[value[1]]}#{value[0]}"
+				sign_text << "#{@transitions[value[:transition]]}#{@colors[value[:color]]}#{value[:message]}"
       end
     if sign_text.length < 1016
       puts sign_text
