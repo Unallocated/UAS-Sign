@@ -16,15 +16,12 @@ The table below shows methods the server will respond to from any client.
 | Method | Target                  | Response                        | Result                                                            |
 |--------|-------------------------|---------------------------------|-------------------------------------------------------------------|
 | POST   | [server]/message/new    | 201 with all message attributes | A new message is written to the sign and assigned a new uuid.     |
-| PUT    | [server]/message/[uuid] | 200 with all message attributes | An existing message is updated.**see note**                       |
+| PUT    | [server]/message/[uuid] | 200 with all message attributes | An existing message is updated.
 | DELETE | [server]/message/[uuid] | 200 with no data                | A message is deleted from the sign.                               |
 | GET    | [server]/message/[uuid] | 200 with all message attributes | Returns message attributes, does not change anything on the sign. |
 
 The server will respond with a 404 error if a target does not exist.
 
-**Note:**Currently the PUT request will set default attribute values to the message when they are not specifed. For example, if you update a
-message that is orange with a new message and do not add `{ "color":"orange" }` to your request, the default value for the color attribute (red)
-will be applied to the message. This is not desired behavior and will be fixed in futre updates.
 
 ###Admin Methods
 This table shows methods the server will respond to if the request orginates from localhost(127.0.0.1) only.
@@ -51,7 +48,7 @@ The attributes in the table below are set by the client in POST or PUT requests.
 | transition | no       | none, close, dots, scrollup, scrolldown                         | This sets how the sign will transition into the message.   |
 | timer      | no       | [num]h[num]m                                                    | This sets how long the message will be displayed.          |
 
-Default values for attributes will be allpied if they are not specifed by the client.
+Default values for attributes will be applied if they are not specifed by the client.
 
 | Attribute  | Default Value |
 |------------|---------------|
@@ -77,54 +74,46 @@ Here are some examples of interacting with the sign using curl. The examples are
 
 `curl -vd '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' localhost:8080/message/new`
 
-Server response(HTTP header + JSON data):
-> < HTTP/1.1 201 Created                                                                                                                            
-> < Content-Type: application/json                                                                                                                  
-> < Location: http://localhost:8080/95b00c05-b134-4f7d-9a61-6fcd55b9ec03                                                                            
-> < Content-Length: 150                                                                                                                             
-> < X-Content-Type-Options: nosniff                                                                                                                 
-> < Connection: keep-alive                                                                                                                          
-> < Server: thin 1.3.1 codename Triple Espresso                                                                                                     
-> <                                                                                                                                                                                                                                                     
-> {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
-
+> < HTTP/1.1 201 Created 
+> < Content-Type: application/json;charset=utf-8
+> < Location: http://localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054
+> < Content-Length: 150
+> < X-Content-Type-Options: nosniff
+> < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+> < Date: Wed, 29 Apr 2015 01:57:05 GMT
+> < Connection: Keep-Alive
+> {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"032653f7-5a58-47f9-a0af-5cb715d19054"}
 
 ####Update the message we just wrote with new text:
 
-`curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03'`
+`curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054'`
 
-Server response(HTTP header + JSON data):
-> < HTTP/1.1 200 OK                                                                                                          
-> < Content-Type: application/json                                                                                           
-> < Content-Length: 100                                                                                                      
-> < X-Content-Type-Options: nosniff                                                                                          
-> < Connection: keep-alive                                                                                                   
-> < Server: thin 1.3.1 codename Triple Espresso                                                                              
-> <                                                                                                                                                                                                       
-> {"message":"This is an updated message","status":"on","uuid":"95b00c05-b134-4f7d-9a61-6fcd55b9ec03"}
+> < HTTP/1.1 200 OK 
+> < Content-Type: application/json;charset=utf-8
+> < Content-Length: 153
+> < X-Content-Type-Options: nosniff
+> < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+> < Date: Wed, 29 Apr 2015 01:59:58 GMT
+> < Connection: Keep-Alive
+> {"message":"This is an updated message","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"032653f7-5a58-47f9-a0af-5cb715d19054"}
 
-Note that the server does not return message attributes that were not set by the client (color, timer, transition). These attributes will be reset to their
-defaults. See note on PUT requests above. This is not desired behavior and will be addressed in the future.
 
 ####Getting the message from the server:
 
-`curl -v localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
+`curl -v localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
 
-Server response(HTTP header + JSON data):
-> < HTTP/1.1 200 OK                                                                        
-> < Content-Type: application/json                                                         
-> < Content-Length: 89                                                                     
-> < X-Content-Type-Options: nosniff                                                        
-> < Connection: keep-alive                                                                 
-> < Server: thin 1.3.1 codename Triple Espresso                                            
-> <                                                                                                                                    
-> {"message":"This is an updated message","color":"red","transition":"close","timer":"30m"}>
-
-Note again that the color, transition, and timer attributes have been reset to defaults.
+> < HTTP/1.1 200 OK 
+> < Content-Type: application/json;charset=utf-8
+> < Content-Length: 93
+> < X-Content-Type-Options: nosniff
+> < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+> < Date: Wed, 29 Apr 2015 02:02:29 GMT
+> < Connection: Keep-Alive
+> {"message":"This is an updated message","color":"orange","transition":"none","timer":"2h15m"}
 
 ####Deleting a message from the server:
 
-`curl -vX DELETE localhost:8080/message/95b00c05-b134-4f7d-9a61-6fcd55b9ec03`
+`curl -vX DELETE localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
 
 Server response(HTTP header + JSON data):
 > < HTTP/1.1 1                                 
