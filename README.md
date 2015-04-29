@@ -99,7 +99,6 @@ Server response(HTTP header + JSON data):
 > < Connection: Keep-Alive
 > {"message":"This is an updated message","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"032653f7-5a58-47f9-a0af-5cb715d19054"}
 
-
 ####Getting the message from the server:
 
 `curl -v localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
@@ -119,11 +118,11 @@ Server response(HTTP header + JSON data):
 `curl -vX DELETE localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
 
 Server response(HTTP header + JSON data):
-> < HTTP/1.1 1                                 
-> < Content-Type: application/json             
-> < Content-Length: 0                          
-> < X-Content-Type-Options: nosniff            
-> < Connection: keep-alive                     
+> < HTTP/1.1 1
+> < Content-Type: application/json
+> < Content-Length: 0
+> < X-Content-Type-Options: nosniff
+> < Connection: keep-alive
 > < Server: thin 1.3.1 codename Triple Espresso
 
 Notes
