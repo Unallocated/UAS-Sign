@@ -35,7 +35,7 @@ class LedSign
 end
 
 class SignHandler
-  def initialize(serial_dev)
+  def initialize(serial_dev, default_message)
     @messages = Hash.new
     @sign = LedSign.new(serial_dev)
     @colors = {
@@ -53,12 +53,14 @@ class SignHandler
       none: " {0} "
     }
     @scheduler = Rufus::Scheduler.new
+		@default = default_message
+		update
   end
   
   attr_reader :messages
 
   #function to add a new message to the sign
-  def add(uuid, message, color = nil, transition = nil, timer = nil)
+  def add(uuid, message, color = nil, transition = nil, timer = nil, default = false)
     color ||= :red
     transition ||= :close
     timer ||= '30m'
@@ -71,7 +73,8 @@ class SignHandler
     @scheduler.in timer do
       self.delete(uuid)
     end
-    return update #update will return false if message length is too long
+		#below we check to see if we're setting the default message to avoid a recursive loop
+    return update unless default == true #update will return false if message length is too long
   end
 
   #deletes message with number uuid from the sign
@@ -89,9 +92,13 @@ class SignHandler
   private
   def update
     sign_text = ""
+		if @messages == {}
+			self.add(1,@default,nil,nil,nil,true)
+		else
+			@messages.delete(1)
+		end
     @messages.each do |key, value|
-        #sign_text << "#{@transitions[value[2]]}#{@colors[value[1]]}#{value[0]}"
-				sign_text << "#{@transitions[value[:transition]]}#{@colors[value[:color]]}#{value[:message]}"
+			sign_text << "#{@transitions[value[:transition]]}#{@colors[value[:color]]}#{value[:message]}"
       end
     if sign_text.length < 1016
       puts sign_text

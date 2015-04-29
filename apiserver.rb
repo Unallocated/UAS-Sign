@@ -11,7 +11,7 @@ conf_json = JSON.parse conf_file
 set :bind, conf_json["bindIp"]
 set :port, conf_json["bindPort"]
 
-sign = SignHandler.new(conf_json["serialDevice"])
+sign = SignHandler.new(conf_json["serialDevice"],conf_json["DefaultMessage"])
 
 before '/message/*' do #set default content-type for all api http responses
   content_type 'application/json'
