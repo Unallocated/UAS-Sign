@@ -74,6 +74,7 @@ Here are some examples of interacting with the sign using curl. The examples are
 
 `curl -vd '{"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m"}' localhost:8080/message/new`
 
+Server response(HTTP header + JSON data):
 > < HTTP/1.1 201 Created 
 > < Content-Type: application/json;charset=utf-8
 > < Location: http://localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054
@@ -88,6 +89,7 @@ Here are some examples of interacting with the sign using curl. The examples are
 
 `curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054'`
 
+Server response(HTTP header + JSON data):
 > < HTTP/1.1 200 OK 
 > < Content-Type: application/json;charset=utf-8
 > < Content-Length: 153
@@ -102,6 +104,7 @@ Here are some examples of interacting with the sign using curl. The examples are
 
 `curl -v localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
 
+Server response(HTTP header + JSON data):
 > < HTTP/1.1 200 OK 
 > < Content-Type: application/json;charset=utf-8
 > < Content-Length: 93
