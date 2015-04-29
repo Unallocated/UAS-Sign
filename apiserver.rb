@@ -51,7 +51,7 @@ put '/message/:uuid' do |id| #change message [uuid]
   raise not_found if sign.messages[id] == nil
   request.body.rewind #ditto above
   data = JSON.parse request.body.read
-	[:color,:transition,:timer].each do |key|
+	[:message,:color,:transition,:timer].each do |key|
 		data[key.to_s] = sign.messages[id][key] unless data.has_key?(key.to_s) #set existing values if not sepcified in request
 	end
   #the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
