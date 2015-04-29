@@ -76,13 +76,21 @@ Here are some examples of interacting with the sign using curl. The examples are
 
 Server response(HTTP header + JSON data):
 > < HTTP/1.1 201 Created 
+>
 > < Content-Type: application/json;charset=utf-8
+>
 > < Location: http://localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054
+>
 > < Content-Length: 150
+>
 > < X-Content-Type-Options: nosniff
+>
 > < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+>
 > < Date: Wed, 29 Apr 2015 01:57:05 GMT
+>
 > < Connection: Keep-Alive
+>
 > {"message":"This message is orange.","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"032653f7-5a58-47f9-a0af-5cb715d19054"}
 
 ####Update the message we just wrote with new text:
@@ -90,13 +98,20 @@ Server response(HTTP header + JSON data):
 `curl -X PUT -vd '{"message":"This is an updated message"}' localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054'`
 
 Server response(HTTP header + JSON data):
-> < HTTP/1.1 200 OK 
+> < HTTP/1.1 200 OK
+>
 > < Content-Type: application/json;charset=utf-8
+>
 > < Content-Length: 153
+>
 > < X-Content-Type-Options: nosniff
+>
 > < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+>
 > < Date: Wed, 29 Apr 2015 01:59:58 GMT
+>
 > < Connection: Keep-Alive
+>
 > {"message":"This is an updated message","color":"orange","transition":"none","timer":"2h15m","status":"on","uuid":"032653f7-5a58-47f9-a0af-5cb715d19054"}
 
 ####Getting the message from the server:
@@ -104,13 +119,20 @@ Server response(HTTP header + JSON data):
 `curl -v localhost:8080/message/032653f7-5a58-47f9-a0af-5cb715d19054`
 
 Server response(HTTP header + JSON data):
-> < HTTP/1.1 200 OK 
+> < HTTP/1.1 200 OK
+>
 > < Content-Type: application/json;charset=utf-8
+>
 > < Content-Length: 93
+>
 > < X-Content-Type-Options: nosniff
+>
 > < Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-11-22)
+>
 > < Date: Wed, 29 Apr 2015 02:02:29 GMT
+>
 > < Connection: Keep-Alive
+>
 > {"message":"This is an updated message","color":"orange","transition":"none","timer":"2h15m"}
 
 ####Deleting a message from the server:
@@ -119,10 +141,15 @@ Server response(HTTP header + JSON data):
 
 Server response(HTTP header + JSON data):
 > < HTTP/1.1 1
+>
 > < Content-Type: application/json
+>
 > < Content-Length: 0
+>
 > < X-Content-Type-Options: nosniff
+>
 > < Connection: keep-alive
+>
 > < Server: thin 1.3.1 codename Triple Espresso
 
 Notes
