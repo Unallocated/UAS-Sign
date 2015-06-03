@@ -53,10 +53,10 @@ class SignHandler
       none: " {0} "
     }
     @scheduler = Rufus::Scheduler.new
-		@default = default_message
-		update
+    @default = default_message
+    update
   end
-  
+
   attr_reader :messages
 
   #function to add a new message to the sign
@@ -65,15 +65,15 @@ class SignHandler
     transition ||= :close
     timer ||= '30m'
     @messages[uuid] = {
-			message: message,
-			color: color,
-			transition: transition,
-			timer: timer
-		}
+      message: message,
+      color: color,
+      transition: transition,
+      timer: timer
+    }
     @scheduler.in timer do
       self.delete(uuid)
     end
-		#below we check to see if we're setting the default message to avoid a recursive loop
+    #below we check to see if we're setting the default message to avoid a recursive loop
     return update unless default == true #update will return false if message length is too long
   end
 
@@ -92,13 +92,13 @@ class SignHandler
   private
   def update
     sign_text = ""
-		if @messages == {}
-			self.add(1,@default,nil,nil,nil,true)
-		else
-			@messages.delete(1)
-		end
+    if @messages == {}
+      self.add(1,@default,nil,nil,nil,true)
+    else
+      @messages.delete(1)
+    end
     @messages.each do |key, value|
-			sign_text << "#{@transitions[value[:transition]]}#{@colors[value[:color]]}#{value[:message]}"
+      sign_text << "#{@transitions[value[:transition]]}#{@colors[value[:color]]}#{value[:message]}"
       end
     if sign_text.length < 1016
       puts sign_text
@@ -106,7 +106,7 @@ class SignHandler
       sleep(1) #keeps the sign from updating too fast
     else
       false #return false when total message length is too long for the sign
-    end 
+    end
   end
 end
 
