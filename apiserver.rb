@@ -31,9 +31,9 @@ post '/message/new' do #write a new message to the sign
   data[:uuid] = newid
   status  201 #return with HTTP status 201 since we're creating a new resource
   headers "Location" => url("/message/#{newid}") #set the HTTP Location header to the message object URI
-	[:color,:transition,:timer].each do |key|
-		data[key.to_s] = sign.messages[newid][key] unless data.has_key?(key.to_s) #set existing values if not sepcified in request
-	end
+  [:color,:transition,:timer].each do |key|
+    data[key.to_s] = sign.messages[newid][key] unless data.has_key?(key.to_s) #set existing values if not sepcified in request
+  end
  data.to_json
 end
 
@@ -51,9 +51,9 @@ put '/message/:uuid' do |id| #change message [uuid]
   raise not_found if sign.messages[id] == nil
   request.body.rewind #ditto above
   data = JSON.parse request.body.read
-	[:message,:color,:transition,:timer].each do |key|
-		data[key.to_s] = sign.messages[id][key] unless data.has_key?(key.to_s) #set existing values if not sepcified in request
-	end
+  [:message,:color,:transition,:timer].each do |key|
+    data[key.to_s] = sign.messages[id][key] unless data.has_key?(key.to_s) #set existing values if not sepcified in request
+  end
   #the "add" method from the sign class doesn't care if you're adding a new message or updating an existing one
   data[:status] = sign.add(id,data['message'],(data['color'].to_sym if data.has_key?('color')),(data['transition'].to_sym if data.has_key?('transition')),(data['timer'] if data.has_key?('timer'))) ? "on" : "off"
   data[:uuid] = id
@@ -71,7 +71,7 @@ get '/message/:uuid' do |id| #I'm not sure if this is useful or why anyone would
   #data['color'] = sign.messages[id][1]
   #data['transition'] = sign.messages[id][2]
   #data['timer'] = sign.messages[id][3] #todo make this return the time the message will be deleted
-	data = sign.messages[id]
+  data = sign.messages[id]
   data.to_json
 end
 
