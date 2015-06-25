@@ -1,6 +1,6 @@
 @dir = "/opt/UAS-Sign/"
 
-worker_processes 1
+worker_processes 2
 working_directory @dir
 
 timeout 30
