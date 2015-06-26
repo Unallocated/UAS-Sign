@@ -6,4 +6,6 @@ You can read about deploying Sinatra applications [here](http://recipes.sinatrar
 
 The files included here will work for a unicorn/ngnix deployment.
 
+For testing out the code without actively deploying is use rackup.
+
 More information about deployment will be included here in the future.
