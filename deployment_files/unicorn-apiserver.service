@@ -11,3 +11,5 @@ ExecStart=/usr/local/bin/unicorn -D -c /opt/UAS-Sign/unicorn.rb -E development
 #ExecReload=/bin/kill -s USR2 $MAINPID && /bin/kill -s QUIT $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
 
+[Install]
+WantedBy=multi-user.target
